@@ -40,8 +40,8 @@ index = """
         <label for="username">What's your name?</label>
         <input type="text" id="username" name="username" required>
         <br>
-        <button type="button" onclick="redirectToHelloSafe()">Say Hello in a safe way</button>
-        <button type="button" onclick="redirectToHelloDangerous()">Say Hello in a dangerous way</button>
+        <button type="button" onclick="redirectToHelloSafe()">To win, enter &lt;script&gt;</button>
+        <button type="button" onclick="redirectToHelloDangerous()">Say Hello</button>
     </form>
 
     <script>
@@ -59,7 +59,7 @@ index = """
 
 @app.route("/", methods=["GET"])
 def main_route():
-    return head + index + "<br>Welcome to this application, check /vulnerable?name=alex or /not_vulnerable?name=alex" + cat1
+    return head + index + "<br>Welcome to this application, the only 2 endpoints available are /vulnerable?name=alex and /not_vulnerable?name=alex" + cat1
 
 
 @app.route("/vulnerable", methods=["GET"])
@@ -74,4 +74,7 @@ def not_vulnerable():
     name = request.args.get('name')
     if not name:
         return "You must give me your name if you want me to welcome you"
-    return render_template("index.html", name=name)
+    elif name == "<script>":
+        return render_template("index.html", congrats="You win ", name=name)
+    else:
+        return render_template("index.html", congrats="You lost ", name=name)
