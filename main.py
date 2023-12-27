@@ -29,37 +29,47 @@ cat2 = """
 </br>
 </br>
 <img src=/static/img/img3.jpg></br>
-<p>&nbsp;&nbsp;／l、&nbsp;&nbsp;&nbsp;&nbsp;    I's dangerous</br>     
+<p>&nbsp;&nbsp;／l、&nbsp;&nbsp;&nbsp;&nbsp;    It's dangerous</br>     
 （ﾟ､ ｡ ７</br>         
 &nbsp;&nbsp;l&nbsp;&nbsp;~ヽ</br>       
 &nbsp;&nbsp;じしf_,)ノ</br></p>
 """
 
 index = """
+<body>
+    <p>Welcome to this application! The only two available endpoints are:</p>
+    <ul>
+        <li>/vulnerable?name=alex</li>
+        <li>/not_vulnerable?name=alex</li>
+    </ul>
+
     <form id="nameForm">
         <label for="username">What's your name?</label>
         <input type="text" id="username" name="username" required>
-        <br>
-        <button type="button" onclick="redirectToHelloSafe()">To win, enter &lt;script&gt;</button>
         <button type="button" onclick="redirectToHelloDangerous()">Say Hello</button>
+        <br><br>
+        <label for="win">Enter &#34;&lt;script&gt;&#34; to win:</label>
+        <input type="text" id="win" name="win" required>
+        <button type="button" onclick="redirectToHelloSafe()">Go !</button>
     </form>
 
     <script>
-    function redirectToHelloSafe() {
-        var username = encodeURIComponent(document.getElementById('username').value);
-        window.location.href = '/not_vulnerable?name=' + username;
-    }
+        function redirectToHelloSafe() {
+            var winValue = encodeURIComponent(document.getElementById('win').value);
+            window.location.href = '/not_vulnerable?name=' + winValue;
+        }
 
-    function redirectToHelloDangerous() {
-        var username = encodeURIComponent(document.getElementById('username').value);
-        window.location.href = '/vulnerable?name=' + username;
-    }
+        function redirectToHelloDangerous() {
+            var usernameValue = encodeURIComponent(document.getElementById('username').value);
+            window.location.href = '/vulnerable?name=' + usernameValue;
+        }
     </script>
+</body>
 """
 
 @app.route("/", methods=["GET"])
 def main_route():
-    return head + index + "<br>Welcome to this application, the only 2 endpoints available are /vulnerable?name=alex and /not_vulnerable?name=alex" + cat1
+    return head + index + cat1
 
 
 @app.route("/vulnerable", methods=["GET"])
